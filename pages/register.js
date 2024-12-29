@@ -93,10 +93,19 @@ export default function Register() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+    // console.log("Form Data Submitted:", formData);
     // Send formData to backend here
+    const res = await fetch("/api/register", {
+      method : "POST" ,
+      headers : {
+        "Content-Type" : "applicaion/json"
+      },
+      body : JSON.stringify(formData)
+    })
+    const data = await res.json()
+    console.log(data)
   };
 
   return (
