@@ -1,11 +1,14 @@
 import { useState } from "react";
-import Head from "next/head"; // import Head
+import Head from "next/head";
+import { useRouter } from "next/router"; // import useRouter
+import Link from "next/link"; // import Link from Next.js
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const router = useRouter(); // สร้างตัวแปร router เพื่อใช้ในการนำทาง
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,9 +16,9 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // ส่งข้อมูลไปยัง API สำหรับเข้าสู่ระบบ
+    // ส่งข้อมูลไปยัง PHP API สำหรับเข้าสู่ระบบ
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("http://localhost/PrjWeb/database/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -23,6 +26,7 @@ export default function Login() {
       const data = await response.json();
       if (response.ok) {
         alert("เข้าสู่ระบบสำเร็จ");
+        router.push("/"); // ส่งไปหน้า index.js
       } else {
         alert(`เกิดข้อผิดพลาด: ${data.message}`);
       }
@@ -34,7 +38,7 @@ export default function Login() {
   return (
     <>
       <Head>
-        <title>เข้าสู่ระบบ</title> {/* ตั้งชื่อเพจในแท็บของเบราว์เซอร์ */}
+        <title>เข้าสู่ระบบ</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
@@ -71,6 +75,13 @@ export default function Login() {
               เข้าสู่ระบบ
             </button>
           </form>
+
+          {/* เพิ่มปุ่มข้อความ "ยังไม่เป็นสมาชิก? สมัครเลย" ที่มีเส้นใต้ */}
+          <div className="mt-4 text-center">
+            <Link href="/register" className="text-blue-500 underline">
+              ยังไม่เป็นสมาชิก? สมัครเลย!
+            </Link>
+          </div>
         </div>
       </div>
     </>

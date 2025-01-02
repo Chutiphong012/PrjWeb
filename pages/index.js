@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+
 
 export default function Home() {
   const [province, setProvince] = useState("กรุงเทพมหานคร");

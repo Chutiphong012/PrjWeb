@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import Head from "next/head"; // import Head
+import Head from "next/head";
+import { useRouter } from "next/router"; // import useRouter
+import Link from "next/link"; // import Link from Next.js
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ export default function Register() {
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const searchBoxRef = useRef(null);
+  const router = useRouter(); // สร้างตัวแปร router
 
   useEffect(() => {
     // Google Map
@@ -93,25 +96,43 @@ export default function Register() {
   };
 
   // Handle form submission
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Form Data Submitted:", formData);
-    // Send formData to backend here
-    const res = await fetch("/api/register", {
-      method : "POST" ,
-      headers : {
-        "Content-Type" : "applicaion/json"
-      },
-      body : JSON.stringify(formData)
-    })
-    const data = await res.json()
-    console.log(data)
+  
+    // ตรวจสอบว่าแต่ละฟิลด์ครบหรือไม่
+    if (!formData.username || !formData.email || !formData.password || !formData.latitude || !formData.longitude) {
+      alert("กรุณากรอกข้อมูลให้ครบ");
+      return;
+    }
+  
+    try {
+      const res = await fetch("http://localhost/PrjWeb/database/register.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await res.json();
+      console.log(data);
+  
+      if (data.success) {
+        router.push("/login");
+      } else {
+        console.error("Registration failed:", data.message);
+        alert(data.message); // แจ้งข้อความข้อผิดพลาดจาก API
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง");
+    }
   };
 
   return (
     <>
       <Head>
-        <title>สมัครสมาชิก</title> {/* ตั้งชื่อเพจในแท็บของเบราว์เซอร์ */}
+        <title>สมัครสมาชิก</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
@@ -120,6 +141,7 @@ export default function Register() {
           สมัครสมาชิก
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* ฟอร์ม */}
           <div className="space-y-2">
             <label className="block text-lg font-medium text-gray-600">ชื่อ</label>
             <input
@@ -205,6 +227,12 @@ export default function Register() {
             </button>
           </div>
         </form>
+
+        <div className="text-center mt-4">
+          <Link href="/login" className="text-blue-500 underline">
+            เป็นสมาชิกอยู่แล้ว? เข้าสู่ระบบเลย!
+          </Link>
+        </div>
       </div>
     </>
   );
