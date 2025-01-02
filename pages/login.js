@@ -16,15 +16,20 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // ส่งข้อมูลไปยัง PHP API สำหรับเข้าสู่ระบบ
+  
     try {
       const response = await fetch("http://localhost/PrjWeb/database/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+  
       const data = await response.json();
+  
       if (response.ok) {
+        // เก็บ Token ใน localStorage
+        localStorage.setItem("token", data.token);
+  
         alert("เข้าสู่ระบบสำเร็จ");
         router.push("/"); // ส่งไปหน้า index.js
       } else {
@@ -34,6 +39,7 @@ export default function Login() {
       console.error("Error:", error);
     }
   };
+  
 
   return (
     <>

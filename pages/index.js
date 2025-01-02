@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import withAuth from '../lib/auth'; // import HOC ที่สร้างไว้
 
-
-export default function Home() {
+function Home() {
   const [province, setProvince] = useState("กรุงเทพมหานคร");
   const [forecast, setForecast] = useState({});
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -29,10 +29,9 @@ export default function Home() {
     "แพร่", "แม่ฮ่องสอน"
   ];
 
-  const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY; // API Key
+  const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
   useEffect(() => {
-    // Current weather data
     const fetchCurrentWeather = async () => {
       setLoadingCurrent(true);
       try {
@@ -47,7 +46,6 @@ export default function Home() {
       setLoadingCurrent(false);
     };
 
-    // 5 Day / 3 Hour Forecast
     const fetchForecast = async () => {
       setLoading(true);
       try {
@@ -55,7 +53,6 @@ export default function Home() {
           `https://api.openweathermap.org/data/2.5/forecast?q=${province}&appid=${API_KEY}&units=metric&lang=th`
         );
         const data = await response.json();
-
         if (data.list) {
           const now = new Date();
           const thailandTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
@@ -65,7 +62,6 @@ export default function Home() {
             return itemDate >= thailandTime && [0, 6, 12, 18].includes(hour);
           });
 
-          // Group by date
           const groupedByDate = validForecast.reduce((acc, curr) => {
             const date = curr.dt_txt.split(" ")[0];
             if (!acc[date]) {
@@ -88,7 +84,6 @@ export default function Home() {
     fetchForecast();
   }, [province]);
 
-  // Format date
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
@@ -97,7 +92,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>หน้าหลัก</title> {/* Set page title */}
+        <title>หน้าหลัก</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
@@ -106,7 +101,6 @@ export default function Home() {
       </h1>
 
       <div className="py-5 px-2">
-        {/* Dropdown to select province */}
         <div className="mb-4 flex justify-between items-center flex-col md:flex-row">
           <select
             value={province}
@@ -121,7 +115,6 @@ export default function Home() {
           </select>
         </div>
 
-        {/* Current weather */}
         {loadingCurrent ? (
           <p className="text-center">กำลังโหลดข้อมูลสภาพอากาศขณะนี้...</p>
         ) : currentWeather ? (
@@ -143,7 +136,6 @@ export default function Home() {
           <p className="text-center">ไม่พบข้อมูลสภาพอากาศขณะนี้</p>
         )}
 
-        {/* Weather forecast */}
         {loading ? (
           <p className="text-center">กำลังโหลดข้อมูลพยากรณ์อากาศ...</p>
         ) : Object.keys(forecast).length === 0 ? (
@@ -164,7 +156,6 @@ export default function Home() {
                       <p>💧 ความชื้น: {item.main.humidity}%</p>
                       <p>🌥️ สภาพอากาศ: {item.weather[0].description}</p>
 
-                      {/* Center icon */}
                       <div className="flex justify-center items-center">
                         <img
                           src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
@@ -183,3 +174,5 @@ export default function Home() {
     </>
   );
 }
+
+export default withAuth(Home); // wrap with HOC

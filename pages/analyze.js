@@ -1,7 +1,8 @@
 import { useState } from "react";
-import Head from 'next/head';  // import Head สำหรับการตั้งชื่อเพจ
+import Head from 'next/head';
+import withAuth from "../lib/auth"; // นำเข้า HOC
 
-export default function Analyze() {
+function Analyze() {
   const [result, setResult] = useState(null);
   const [severity, setSeverity] = useState(null);
   const [symptoms, setSymptoms] = useState({
@@ -27,7 +28,7 @@ export default function Analyze() {
   return (
     <>
       <Head>
-        <title>วิเคราะห์โรค</title> {/* ตั้งชื่อเพจในแท็บของเบราว์เซอร์ */}
+        <title>วิเคราะห์โรค</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
@@ -149,3 +150,5 @@ export default function Analyze() {
     </>
   );
 }
+
+export default withAuth(Analyze);

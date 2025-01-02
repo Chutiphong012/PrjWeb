@@ -1,6 +1,16 @@
 import Head from 'next/head';
+import withAuth from '../lib/auth'; // นำเข้า HOC
+import { useRouter } from 'next/router'; // นำเข้า useRouter
 
-export default function Home() {
+function Home() {
+  const router = useRouter();
+
+  // ฟังก์ชันออกจากระบบ
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // ลบ token ออกจาก localStorage
+    router.push('/login'); // Redirect ไปหน้า login
+  };
+
   return (
     <>
       <Head>
@@ -51,7 +61,10 @@ export default function Home() {
             <button className="bg-green-500 text-white py-3 px-4 rounded-md hover:bg-green-600 md:w-auto">
               แก้ไขตำแหน่งสวน
             </button>
-            <button className="bg-red-500 text-white py-3 px-4 rounded-md hover:bg-red-600 md:w-auto">
+            <button 
+              onClick={handleLogout} // เพิ่มฟังก์ชันออกจากระบบ
+              className="bg-red-500 text-white py-3 px-4 rounded-md hover:bg-red-600 md:w-auto"
+            >
               ออกจากระบบ
             </button>
           </div>
@@ -60,3 +73,5 @@ export default function Home() {
     </>
   );
 }
+
+export default withAuth(Home); // ห่อหุ้มด้วย HOC เพื่อตรวจสอบการเข้าสู่ระบบ

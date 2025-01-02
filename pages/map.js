@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import Head from 'next/head';
+import withAuth from '../lib/auth'; // นำเข้า HOC
 
-export default function Map() {
+function Map() {
   const mapContainerRef = useRef(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Map() {
 
       <div className="min-h-screen flex flex-col justify-start items-center py-4">
         <h1 className="text-center text-2xl md:text-4xl font-bold py-4 px-4 text-white">
-        แสดงตำแหน่งโรค
+          แสดงตำแหน่งโรค
         </h1>
         <div className="bg-white p-8 mx-4 my-6 rounded-2xl shadow-lg w-full max-w-4xl">
           <div
@@ -42,3 +43,5 @@ export default function Map() {
     </>
   );
 }
+
+export default withAuth(Map);

@@ -36,7 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ตรวจสอบรหัสผ่าน
     if ($user && password_verify($password, $user['password'])) {
-        echo json_encode(["message" => "เข้าสู่ระบบสำเร็จ"]);
+        // สร้าง Token
+        $token = base64_encode(json_encode(['id' => $user['id'], 'email' => $user['email']]));
+
+        // ส่ง Token กลับไปให้ Client
+        echo json_encode(["message" => "เข้าสู่ระบบสำเร็จ", "token" => $token]);
     } else {
         echo json_encode(["message" => "อีเมลหรือรหัสผ่านไม่ถูกต้อง"]);
     }
