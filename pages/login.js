@@ -76,7 +76,7 @@ export default function Login() {
             </button>
           </form>
 
-          {/* เพิ่มปุ่มข้อความ "ยังไม่เป็นสมาชิก? สมัครเลย" ที่มีเส้นใต้ */}
+          
           <div className="mt-4 text-center">
             <Link href="/register" className="text-blue-500 underline">
               ยังไม่เป็นสมาชิก? สมัครเลย!
