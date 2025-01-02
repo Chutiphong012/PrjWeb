@@ -25,10 +25,10 @@ export default function Login() {
       });
   
       const data = await response.json();
-  
-      if (response.ok) {
+      console.log(data)
+      if (data.status==="success") {
         // เก็บ Token ใน localStorage
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.userId);
   
         alert("เข้าสู่ระบบสำเร็จ");
         router.push("/"); // ส่งไปหน้า index.js

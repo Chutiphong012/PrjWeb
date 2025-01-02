@@ -37,12 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ตรวจสอบรหัสผ่าน
     if ($user && password_verify($password, $user['password'])) {
         // สร้าง Token
-        $token = base64_encode(json_encode(['id' => $user['id'], 'email' => $user['email']]));
+
+    //    $token = base64_encode(json_encode(['id' => $user['id'], 'email' => $user['email']]));
 
         // ส่ง Token กลับไปให้ Client
-        echo json_encode(["message" => "เข้าสู่ระบบสำเร็จ", "token" => $token]);
+        echo json_encode(["status"=>"success","message" => "เข้าสู่ระบบสำเร็จ", "userId" => $user['id']]);
     } else {
-        echo json_encode(["message" => "อีเมลหรือรหัสผ่านไม่ถูกต้อง"]);
+        echo json_encode(["status"=>"error","message" => "อีเมลหรือรหัสผ่านไม่ถูกต้อง"]);
     }
 
     $stmt->close();

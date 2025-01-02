@@ -1,20 +1,22 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 
-export default function Document() {
-  return (
-    <Html>
-      <Head>
-        {/* สคริปต์ Google Maps API ที่จะโหลด */}
-        <script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-          async
-          defer
-        ></script>
-      </Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+class MyDocument extends Document {
+  render() {
+    return (
+      <Html>
+        <Head>
+          <script
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+            async
+          ></script>
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
+
+export default MyDocument;
